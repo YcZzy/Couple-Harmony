@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useArgumentStore } from '../stores/argument';
-import type { Category } from '../types';
 
 const store = useArgumentStore();
 const showAddForm = ref(false);

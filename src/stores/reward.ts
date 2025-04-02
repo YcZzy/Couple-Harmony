@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import type { Reward } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 

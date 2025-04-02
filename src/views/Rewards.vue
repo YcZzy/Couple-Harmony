@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import { useArgumentStore } from '../stores/argument';
 import { useRewardStore } from '../stores/reward';
 import type { Reward } from '../types';
-import { v4 as uuidv4 } from 'uuid';
 
-const argumentStore = useArgumentStore();
 const rewardStore = useRewardStore();
 
 // 初始化奖励存储

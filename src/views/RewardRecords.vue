@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, computed } from 'vue';
 import { useRewardStore } from '../stores/reward';
-import type { RewardRecord } from '../stores/reward';
 
 const rewardStore = useRewardStore();
 

@@ -3,19 +3,35 @@ import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useArgumentStore } from '../stores/argument';
 import dayjs from 'dayjs';
+import type { Argument } from '../types';
+
+interface Comment {
+  id: string;
+  content: string;
+  date: string;
+}
+
+// 扩展Argument类型以包含comments和solution字段
+interface ExtendedArgument extends Argument {
+  comments?: Comment[];
+  solution?: string;
+}
 
 const route = useRoute();
 const router = useRouter();
 const store = useArgumentStore();
 
-const argument = ref(null);
+const argument = ref<ExtendedArgument | null>(null);
 const newComment = ref('');
 const solution = ref('');
 
 onMounted(() => {
   const id = route.params.id as string;
-  argument.value = store.argumentList.find(arg => arg.id === id);
-  if (!argument.value) {
+  const foundArgument = store.argumentList.find(arg => arg.id === id);
+  if (foundArgument) {
+    // 将找到的参数转换为ExtendedArgument类型
+    argument.value = foundArgument as ExtendedArgument;
+  } else {
     router.push('/arguments');
   }
 });
@@ -35,7 +51,13 @@ const addComment = () => {
       content: newComment.value,
       date: new Date().toISOString()
     });
-    store.updateArgument(argument.value.id, { comments });
+    
+    // 使用类型断言来处理comments字段
+    store.updateArgument(argument.value.id, { 
+      ...argument.value,
+      comments 
+    } as Partial<Argument>);
+    
     argument.value.comments = comments;
     newComment.value = '';
   }
@@ -43,10 +65,12 @@ const addComment = () => {
 
 const saveSolution = () => {
   if (argument.value && solution.value.trim()) {
+    // 使用类型断言处理solution字段
     store.updateArgument(argument.value.id, { 
-      solution: solution.value,
-      status: 'resolved'
+      status: 'resolved',
+      resolution: solution.value // 使用resolution而不是solution
     });
+    
     argument.value.solution = solution.value;
     argument.value.status = 'resolved';
   }
@@ -71,7 +95,7 @@ const saveSolution = () => {
         <div class="flex justify-between items-start">
           <div>
             <h2 class="text-xl font-semibold text-gray-900">
-              {{ store.categories.find(c => c.id === argument.category)?.name }}
+              {{ store.categories.find(c => c.id === argument?.category)?.name }}
             </h2>
             <p class="text-sm text-gray-500">
               {{ dayjs(argument.date).format('YYYY-MM-DD HH:mm') }}
@@ -107,7 +131,7 @@ const saveSolution = () => {
       <!-- 描述 -->
       <div class="bg-white rounded-lg shadow p-6">
         <h3 class="text-lg font-medium text-gray-900 mb-4">描述</h3>
-        <p class="text-gray-600">{{ argument.description || '暂无描述' }}</p>
+        <p class="text-gray-600">{{ argument.reflection || '暂无描述' }}</p>
       </div>
 
       <!-- 解决方案 -->

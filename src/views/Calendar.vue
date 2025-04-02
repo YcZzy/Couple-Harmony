@@ -3,17 +3,26 @@ import { ref, computed } from 'vue';
 import { useArgumentStore } from '../stores/argument';
 import { useRouter } from 'vue-router';
 import dayjs from 'dayjs';
+import type { Argument } from '../types';
 
 const store = useArgumentStore();
 const router = useRouter();
 const currentDate = ref(dayjs());
-const selectedDay = ref(null);
+const selectedDay = ref<{
+  date: dayjs.Dayjs;
+  isCurrentMonth: boolean;
+  arguments: Argument[];
+} | null>(null);
 const showDetailsModal = ref(false);
 
 const weeks = computed(() => {
   const start = currentDate.value.startOf('month').startOf('week');
   const end = currentDate.value.endOf('month').endOf('week');
-  const days = [];
+  const days: {
+    date: dayjs.Dayjs;
+    isCurrentMonth: boolean;
+    arguments: Argument[];
+  }[] = [];
   let day = start;
 
   while (day.isBefore(end)) {
@@ -40,16 +49,24 @@ const nextMonth = () => {
   currentDate.value = currentDate.value.add(1, 'month');
 };
 
-const showDayDetails = (day) => {
+const showDayDetails = (day: {
+  date: dayjs.Dayjs;
+  isCurrentMonth: boolean;
+  arguments: Argument[];
+}) => {
   selectedDay.value = day;
   showDetailsModal.value = true;
 };
 
-const getDayStyle = (day) => {
+const getDayStyle = (day: {
+  date: dayjs.Dayjs;
+  isCurrentMonth: boolean;
+  arguments: Argument[];
+}) => {
   if (!day.arguments.length) return '';
   
-  const hasUnresolved = day.arguments.some(arg => arg.status === 'ongoing');
-  const allResolved = day.arguments.every(arg => arg.status === 'resolved');
+  const hasUnresolved = day.arguments.some((arg: Argument) => arg.status === 'ongoing');
+  const allResolved = day.arguments.every((arg: Argument) => arg.status === 'resolved');
   
   if (hasUnresolved) return 'bg-red-50';
   if (allResolved) return 'bg-green-50';

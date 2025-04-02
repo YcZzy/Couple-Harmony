@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useArgumentStore } from '../stores/argument';
 import { computed } from 'vue';
-import { Line } from 'vue-chartjs';
 import StatCard from '../components/StatCard.vue';
 import QuickAdd from '../components/QuickAdd.vue';
 import CategoryManager from '../components/CategoryManager.vue';
