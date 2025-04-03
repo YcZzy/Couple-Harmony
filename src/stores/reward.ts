@@ -15,20 +15,20 @@ export const useRewardStore = defineStore('reward', () => {
   const rewardList = ref<Reward[]>([
     {
       id: '1',
-      name: 'Date Night',
-      description: 'Winner chooses restaurant and movie',
+      name: '约会',
+      description: '晚餐',
       type: 'reward'
     },
     {
       id: '2',
-      name: 'Massage Session',
-      description: '30-minute massage from partner',
+      name: '马杀鸡',
+      description: '30 分钟按摩',
       type: 'reward'
     },
     {
       id: '3',
-      name: 'Chores Day',
-      description: 'Handle all household chores for a day',
+      name: '家务',
+      description: '收拾家务',
       type: 'punishment'
     }
   ]);
